@@ -11,10 +11,6 @@ _model = None
 def get_model():
     global _model
     if _model is None:
-        # _model = SentenceTransformer('shibing624/text2vec-base-chinese')
-        # _model = SentenceTransformer('lier007/xiaobu-embedding-v2') 
-        # _model = SentenceTransformer('iampanda/zpoint_large_embedding_zh') #
-        # _model = SentenceTransformer('TencentBAC/Conan-embedding-v1')#最好的
         _model = SentenceTransformer('dunzhang/stella-mrl-large-zh-v3.5-1792d', device='cuda')#('TencentBAC/Conan-embedding-v1')#最好的
         # print("Device:", _model.device)
         # print('torch', torch.cuda.is_available())
@@ -46,18 +42,8 @@ def SBERT_retrieve(qs, source, corpus_dict):
     return source[most_relevant_idx]
 
 
-############# doc split sentence #############
-# def embed_sentences_split(document):
-#     sentences = re.split(r'(。|！|\!|？|\?)', document)
-#     sentence_embeddings = np.array([embed_text_sbert(sentence) for sentence in sentences if sentence], dtype='float32')
-#     return sentences, sentence_embeddings
-
 def faq_embed_sentences(document):
     sentences = re.split(r'(。|！|\!|？|\?)', document)
-    # sentences = re.sub(r'[^a-zA-Z\u4e00-\u9fff]+', '', document)
-    # document = document.replace(' ', '')
-    # sentences = re.split(r'(?:。|！|\!|？|\?|\n)', document)
-    # sentence_embeddings = np.array([embed_text_sbert(sentence) for sentence in sentences if sentence], dtype='float32')
     sentences = [sentence for sentence in sentences]
     sentence_embeddings = embed_text_sbert(sentences)
     sentence_embeddings = np.array(sentence_embeddings, dtype='float32')

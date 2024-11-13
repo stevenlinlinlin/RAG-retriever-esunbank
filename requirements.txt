@@ -1,0 +1,12 @@
+pdfplumber
+tqdm
+rank_bm25
+jieba
+transformers
+scikit-learn
+# pytorch
+sentence-transformers
+nltk
+paddleocr
+paddlepaddle
+FlagReranker

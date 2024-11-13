@@ -3,7 +3,7 @@
 初賽：金融問答檢索找出相關文獻
 
 ## Leaderboard
-初賽37名達前標25％（37/222）  
+初賽35名達前標25％（35/222）  
 TEAM_6462 : 
 [Leaderboard Link](https://tbrain.trendmicro.com.tw/Competitions/Details/37)  
 ![image](https://github.com/stevenlinlinlin/RAG-retriever-esunbank/blob/main/pictures/Leaderboard.png)

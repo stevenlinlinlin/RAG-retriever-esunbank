@@ -1,12 +1,12 @@
-pdfplumber
-tqdm
-rank_bm25
-jieba
-transformers
-scikit-learn
+pdfplumber==0.42.1
+tqdm==4.66.5
+rank_bm25==0.2.2
+jieba==0.42.1
+transformers==4.44.2
+scikit-learn==1.5.1
 # pytorch
-sentence-transformers
-nltk
+sentence-transformers==3.2.1
+nltk==3.9.1
+FlagReranker==1.3.2
 paddleocr
 paddlepaddle
-FlagReranker

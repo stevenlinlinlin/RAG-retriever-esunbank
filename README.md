@@ -24,7 +24,7 @@ TEAM_6462 :
 ### Final method
 - faq/insurance文檔
     - 一般的句子或文章
-    - 切成chunks後進行SBERT相似度retriever
+    - 切成句子後進行SBERT相似度retriever
 -  finance文檔
     - 表格或是有特殊格式
     - 只保留文字其他去除

@@ -12,6 +12,7 @@ cross_encoder_model = FlagReranker('BAAI/bge-reranker-large', use_fp16=True, dev
 _model = None
 
 def get_model():
+    """Load and return the pre-trained SBERT model."""
     global _model
     if _model is None:
         _model = SentenceTransformer('dunzhang/stella-mrl-large-zh-v3.5-1792d', device='cuda')#('TencentBAC/Conan-embedding-v1')#最好的
@@ -21,10 +22,12 @@ def get_model():
 
 
 def embed_text_sbert(text):
+    """Embed text using SBERT and return the embedding."""
     model = get_model()
     return model.encode(text)
 
 def SBERT_retrieve(qs, source, corpus_dict):
+    """Retrieve the most relevant document from the source using SBERT and cosine similarity."""
     filtered_corpus = [corpus_dict[int(file)] for file in source]
     
     source_vectors = np.array([embed_text_sbert(doc) for doc in filtered_corpus], dtype='float32')
@@ -38,6 +41,7 @@ def SBERT_retrieve(qs, source, corpus_dict):
 
 
 def faq_embed_sentences(document):
+    """Split a document into sentences and return them with their embeddings."""
     sentences = re.split(r'(。|！|\!|？|\?)', document)
     sentences = [sentence for sentence in sentences]
     sentence_embeddings = embed_text_sbert(sentences)
@@ -46,6 +50,7 @@ def faq_embed_sentences(document):
     return sentences, sentence_embeddings
 
 def embed_sentences(document):
+    """Segment a document and return the segments with their embeddings."""
     document = document.replace(' ', '')
     # 定義切割的字數
     segment_length = 256
@@ -71,7 +76,7 @@ def embed_sentences(document):
 
 # retrieve
 def SBERT_retrieve_sentence_og(qs, source, corpus_dict, qs_category):
-
+    """Retrieve the most similar sentence from source documents using SBERT and BM25 for re-ranking."""
     query_vector = embed_text_sbert(qs).reshape(1, -1)
     
     best_reference = None
@@ -104,6 +109,7 @@ def SBERT_retrieve_sentence_og(qs, source, corpus_dict, qs_category):
 
 # SBERT -> BM25
 def SBERT_bm25_retrieve_sentence_og(qs, source, corpus_dict):
+    """Retrieve the most similar sentence from source documents using SBERT with BM25 re-ranking."""
     query_vector = embed_text_sbert(qs).reshape(1, -1)
 
     top_docs = []
@@ -131,6 +137,7 @@ def SBERT_bm25_retrieve_sentence_og(qs, source, corpus_dict):
     return BM25_retrieve(qs, candidates_source, corpus_dict)
 
 def BM25_retrieve(qs, source, corpus_dict):
+    """Retrieve the most relevant document from the source using BM25."""
     filtered_corpus = [corpus_dict[int(file)] for file in source]
 
     # [TODO] 可自行替換其他檢索方式，以提升效能
@@ -145,6 +152,7 @@ def BM25_retrieve(qs, source, corpus_dict):
 
 
 def SBERT_retrieve_chunk_rerank(qs, source, corpus_dict, qs_category, bm25_weight=0.2, cross_encoder_weight=0.8):
+    """Retrieve and re-rank the most relevant document using SBERT, BM25, and Cross-Encoder."""
     query_vector = embed_text_sbert(qs).reshape(1, -1)
     
     # filtered_candidates = [corpus_dict[int(file)] for file in source]

@@ -9,6 +9,7 @@ import re
 _model = None
 
 def get_model():
+    """Load and return the pre-trained SBERT model."""
     global _model
     if _model is None:
         _model = SentenceTransformer('dunzhang/stella-mrl-large-zh-v3.5-1792d', device='cuda')#('TencentBAC/Conan-embedding-v1')#最好的
@@ -19,10 +20,12 @@ def get_model():
 
 
 def embed_text_sbert(text):
+    """Embed text using SBERT and return the embedding."""
     model = get_model()
     return model.encode(text)
 
 def SBERT_retrieve(qs, source, corpus_dict):
+    """Retrieve the most relevant document from the source using SBERT and cosine similarity."""
     filtered_corpus = [corpus_dict[int(file)] for file in source]
     
     source_vectors = np.array([embed_text_sbert(doc) for doc in filtered_corpus], dtype='float32')
@@ -43,6 +46,7 @@ def SBERT_retrieve(qs, source, corpus_dict):
 
 
 def faq_embed_sentences(document):
+    """Split a document into sentences and return them with their embeddings."""
     sentences = re.split(r'(。|！|\!|？|\?)', document)
     sentences = [sentence for sentence in sentences]
     sentence_embeddings = embed_text_sbert(sentences)
@@ -51,6 +55,7 @@ def faq_embed_sentences(document):
     return sentences, sentence_embeddings
 
 def embed_sentences(document):
+    """Segment a document into overlapping chunks and return them with their embeddings."""
     document = document.replace(' ', '')  # 移除空格
     # 定義切割的字數
     segment_length = 256
@@ -74,7 +79,7 @@ def embed_sentences(document):
 
 # retrieve
 def SBERT_retrieve_sentence(qs, source, corpus_dict, qs_category):
-
+    """Retrieve the most similar sentence from source documents using SBERT and cosine similarity."""
     query_vector = embed_text_sbert(qs).reshape(1, -1)
     
     best_reference = None

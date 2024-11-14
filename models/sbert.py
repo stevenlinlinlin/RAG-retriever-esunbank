@@ -9,6 +9,7 @@ import re
 _model = None
 
 def get_model():
+    """Load and return the pre-trained SBERT model."""
     global _model
     if _model is None:
         # _model = SentenceTransformer('shibing624/text2vec-base-chinese')
@@ -23,10 +24,12 @@ def get_model():
 
 
 def embed_text_sbert(text):
+    """Embed text using SBERT and return the embedding."""
     model = get_model()
     return model.encode(text)
 
 def SBERT_retrieve(qs, source, corpus_dict):
+    """Retrieve the most relevant document from the source using SBERT and cosine similarity."""
     filtered_corpus = [corpus_dict[int(file)] for file in source]
     
     source_vectors = np.array([embed_text_sbert(doc) for doc in filtered_corpus], dtype='float32')
@@ -48,11 +51,13 @@ def SBERT_retrieve(qs, source, corpus_dict):
 
 ############# doc split sentence #############
 def embed_sentences(document):
+    """Split a document into sentences and return them with their embeddings."""
     sentences = re.split(r'(。|！|\!|？|\?)', document)
     sentence_embeddings = np.array([embed_text_sbert(sentence) for sentence in sentences if sentence], dtype='float32')
     return sentences, sentence_embeddings
 
 def faq_embed_sentences(document):
+    """Split a document into sentences for FAQ purposes and return them with their embeddings."""
     sentences = re.split(r'(。|！|\!|？|\?)', document)
     # sentences = re.sub(r'[^a-zA-Z\u4e00-\u9fff]+', '', document)
     # document = document.replace(' ', '')
@@ -61,6 +66,7 @@ def faq_embed_sentences(document):
     return sentences, sentence_embeddings
     
 def SBERT_retrieve_sentence(qs, source, corpus_dict, qs_category):
+    """Retrieve the most similar sentence from source documents using SBERT and cosine similarity."""
     query_vector = embed_text_sbert(qs).reshape(1, -1)
     
     best_reference = None

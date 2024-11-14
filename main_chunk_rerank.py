@@ -11,6 +11,7 @@ from models.sbert_chunk_rerank import SBERT_retrieve_chunk_rerank#, SBERT_retrie
 
 
 def load_model(model_name):
+    """Load and return the specified retrieval model."""
     print(f"Loading model: {model_name}")
     if model_name == 'BM25':
         model = BM25_retrieve
@@ -27,6 +28,7 @@ def load_model(model_name):
 
 
 def main(corpus_dict_insurance, corpus_dict_finance, key_to_source_dict, question_path, model, finance_model):
+    """Retrieve answers for a set of questions based on the model and corpus data."""
     answer_dict = {"answers": []}
 
     qs_ref = read_json(question_path)
@@ -62,6 +64,7 @@ def main(corpus_dict_insurance, corpus_dict_finance, key_to_source_dict, questio
 
 
 def evaluate(answer_dict, output_path, gt_path, model_name, eval=False):
+    """Evaluate the model's performance and write results to output."""
     if eval:
         ground_truths = read_json(gt_path)
         gt_dict = {gt["qid"]: [gt["retrieve"], gt["category"]] for gt in ground_truths["ground_truths"]}

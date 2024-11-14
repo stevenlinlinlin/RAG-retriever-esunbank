@@ -5,6 +5,7 @@ import pdfplumber
 from tqdm import tqdm
 
 def load_all_source_data(source_path, ):
+    """Load insurance, finance, and FAQ data from the specified source path."""
     print("Loading insurance data...")
     source_path_insurance = os.path.join(source_path, 'insurance')
     corpus_dict_insurance = load_data(source_path_insurance)
@@ -20,6 +21,7 @@ def load_all_source_data(source_path, ):
     return corpus_dict_insurance, corpus_dict_finance, key_to_source_dict
 
 def read_pdf(pdf_loc, page_infos: list = None):
+    """Read text from a PDF file, optionally from specific pages."""
     pdf = pdfplumber.open(pdf_loc)
 
     pages = pdf.pages[page_infos[0]:page_infos[1]] if page_infos else pdf.pages
@@ -33,6 +35,7 @@ def read_pdf(pdf_loc, page_infos: list = None):
     return pdf_text
 
 def read_txt(txt_loc):
+    """Read and return text from a TXT file."""
     with open(txt_loc, 'r', encoding='utf-8') as file:
         text = file.read()
     return text
@@ -43,6 +46,7 @@ def read_txt(txt_loc):
 #     return corpus_dict
 
 def load_data(source_path):
+    """Load text data from all TXT files in the specified source path."""
     masked_file_ls = os.listdir(source_path)
     # masked_file_ls = [file for file in os.listdir(source_path) if file.endswith('.txt')]
     masked_file_ls = [file for file in os.listdir(source_path) if file.endswith('.txt')]
@@ -54,10 +58,12 @@ def load_data(source_path):
     return corpus_dict
 
 def read_json(file_path):
+    """Read and return JSON data from the specified file path."""
     with open(file_path, 'r') as f:
         return json.load(f)
 
 def write_model_results(output_path, file_name, ap_at_1):
+    """Write the model's AP@1 result to a CSV file in the output path."""
     results_path = os.path.join(output_path, 'models_ap1.csv')
     file_exists = os.path.isfile(results_path)
     with open(results_path, mode='a', newline='') as file:
@@ -68,6 +74,7 @@ def write_model_results(output_path, file_name, ap_at_1):
     return results_path
 
 def write_answer_json(answer_dict, output_path, model_name):
+    """Write the answer dictionary to a JSON file with a unique name in the output path."""
     # answer_path = os.path.join(output_path, f"{model_name}_answers.json")
     answer_path = os.path.join(output_path, f"pred_retrieve.json")
     answer_path = get_unique_filename(answer_path)
@@ -79,6 +86,7 @@ def write_answer_json(answer_dict, output_path, model_name):
     return answer_path, file_name
 
 def get_unique_filename(answer_path):
+    """Generate a unique file name by appending an index if the file already exists."""
     base, extension = os.path.splitext(answer_path)
     i = 1
     new_answer_path = answer_path

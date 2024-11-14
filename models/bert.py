@@ -10,6 +10,7 @@ _tokenizer = None
 _model = None
 
 def get_tokenizer_and_model(model_name="bert-base-chinese"):
+    """Load and return the BERT tokenizer and model."""
     global _tokenizer, _model
     if _tokenizer is None:
         _tokenizer = BertTokenizer.from_pretrained(model_name)
@@ -18,6 +19,7 @@ def get_tokenizer_and_model(model_name="bert-base-chinese"):
     return _tokenizer, _model
 
 def embed_text_bert(text):
+    """Embed text using BERT and return the embedding as a numpy array."""
     tokenizer, model = get_tokenizer_and_model()
     inputs = tokenizer(text, return_tensors="pt", max_length=512, truncation=True)
     with torch.no_grad():
@@ -25,6 +27,7 @@ def embed_text_bert(text):
     return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
 
 def BERT_retrieve(qs, source, corpus_dict):
+    """Retrieve the most relevant document from the source using BERT embeddings and FAISS."""
     filtered_corpus = [corpus_dict[int(file)] for file in source]
     
     source_vectors = np.array([embed_text_bert(doc) for doc in filtered_corpus], dtype='float32')

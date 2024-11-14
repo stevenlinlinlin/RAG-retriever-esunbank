@@ -2,10 +2,8 @@ from rank_bm25 import BM25Okapi
 import jieba
 
 def BM25_retrieve(qs, source, corpus_dict):
+    """Retrieve the most relevant document from the source using BM25."""
     filtered_corpus = [corpus_dict[int(file)] for file in source]
-
-    # [TODO] 可自行替換其他檢索方式，以提升效能
-
     tokenized_corpus = [list(jieba.cut_for_search(doc)) for doc in filtered_corpus]
     bm25 = BM25Okapi(tokenized_corpus)
     tokenized_query = list(jieba.cut_for_search(qs))

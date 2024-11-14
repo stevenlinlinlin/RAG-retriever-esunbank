@@ -8,6 +8,7 @@ import logging
 logging.getLogger("ppocr").setLevel(logging.ERROR)
 
 def extract_text_from_pdf(pdf_path):
+    """Extract text from a PDF file, using OCR if necessary."""
     with pdfplumber.open(pdf_path) as pdf:
         text = ""
         for page in pdf.pages:
@@ -24,6 +25,7 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def convert_pdfs_to_text(pdf_folder, output_folder):
+    """Convert all PDF files in a folder to text files in an output folder."""
     print(f"Converting PDFs from {pdf_folder} to text files in {output_folder}")
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
